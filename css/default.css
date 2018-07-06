@@ -3,7 +3,9 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+body {
+  font-family: "微软雅黑";
+}
 .token.selector{
   color: #000;
 }
@@ -13,7 +15,7 @@
 .token.function{
   color:#333;
 }
-#node{
+#code{
   height: 100vh;
   overflow: hidden;
 }

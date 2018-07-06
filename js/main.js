@@ -1,34 +1,34 @@
 // 把code写到code和style标签里面
 function writeCode(prefix, code, fn) {
   let domCode = document.querySelector('#code');
-  // domCode.innerHTML = prefix;
+  // domCode.innerHTML = prefix || '';
   let n = 0;
   let timer = setInterval(() => {
     n++;
-    console.log('开始写代码');
     domCode.innerHTML = Prism.highlight(prefix + code.substring(0, n), Prism.languages.css)
     // code.innerHTML = code.innerHTML.replace('html','<span style="color:#963">html</span>')
     styleTag.innerHTML = prefix + code.substring(0, n);
     domCode.scrollTop = domCode.scrollHeight;
     if (n >= code.length) {
       window.clearInterval(timer);
-      console.log('done');
+      // console.log('done');
       fn.call();
     }
-  }, 10)
+  }, 20)
 }
 
-function writeMarkdown(markdown,fn){
-  let domPaper = document.querySelector('#paper > content');
+function writeMarkdown(markdown){
+  let domPaper = document.querySelector('#paper > .content');
   let n = 0;
   let timer = setInterval(() => {
-    n++;
-    domCode.scrollTop = domPaper.scrollHeight;
+    n += 1;
+    domPaper.innerHTML = markdown.substring(0,n);
+    domPaper.scrollTop = domPaper.scrollHeight;
     if (n >= markdown.length) {
       window.clearInterval(timer);
       console.log('done');
-      fn.call();
     }
+    
   }, 10)
 }
 
@@ -46,7 +46,7 @@ var result = `/*
   transition:all 1s;
 }
 html{
-    background:#1E1E34;
+    background:#1e1e1e;
     font-size:16px;
 }
 #code {
@@ -56,13 +56,13 @@ html{
 
 /* 代码高亮*/
 .token.selector{
-  color: #690;
+  color: #1F3991;
 }
-.token.property{
-  color:#905;
+.token.property{  
+  color:#B8881E;
 }
 .token.function{
-  color:#dd4a68;
+  color:#AD491E;
 }
 /*加点3D效果*/
 #code {
@@ -77,7 +77,7 @@ html{
   right:0;
   width:50%;
   height:100%;
-  background:#eee;
+  background:#1F3991;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -90,19 +90,43 @@ html{
 }
 /*正经一点*/
 /*来张A4纸*/
-
+#code {
+  position:fixed;
+  left:0;
+  width:50%;
+  height:100%;
+}
+#paper {
+  position:fixed;
+  right:0;
+  width:50%;
+  height:100%;
+  background:##1F3991;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:16px;
+}
+#paper > .content {
+  background:#ccc;
+  height:100%;
+  width:100%;
+}
 `;
+
 
 var result2 = `
   #paper{
-    background:#999;
+   
   }
 
-  /* 接下来 把md 变成 html marked.js*/
-  /* 接下来 给html加样式*/
-
-`
+ `
+ //   /* 接下来 把md 变成 html marked.js*/
+//   /* 接下来 给html加样式*/
 var md = `
+# 姓名：xxx
+# 擅长：诗词歌赋
+# 性别：保密
 # 短歌行
 对酒当歌
 人生几何
@@ -117,16 +141,13 @@ var md = `
 悠悠我心
 但为君故
 沉吟至今
-
 `
 
 writeCode('', result, () => {
   createPaper(() => {
-    console.log('paper有了');
     writeCode(result, result2,()=>{
       writeMarkdown(md);
     });
-
   });
 });
 
@@ -136,16 +157,14 @@ writeCode('', result, () => {
 // 4.闹钟时间到
 // 5.写第一行代码
 
-
-
-
 function createPaper(fn) {
   var paper = document.createElement('div');
   paper.id = 'paper';
   var content = document.createElement('pre');
+  
   content.className = 'content';
   paper.appendChild(content);
   document.body.appendChild(paper);
-  fn.call();
+  fn.call();//同步里也可以回调
 }
 
